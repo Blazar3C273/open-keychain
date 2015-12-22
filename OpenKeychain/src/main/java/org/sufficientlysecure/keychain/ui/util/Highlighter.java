@@ -22,7 +22,6 @@ import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 
 import org.sufficientlysecure.keychain.R;
-import org.sufficientlysecure.keychain.ui.util.FormattingUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +42,9 @@ public class Highlighter {
             return highlight;
         }
 
-        Pattern pattern = Pattern.compile("(?i)(" + mQuery.trim().replaceAll("\\s+", "|") + ")");
+        String sanitizedQuery = mQuery.replaceAll("[-.\\+*?\\[^\\]$(){}=!<>|:\\\\]", "\\\\$0");
+        Pattern pattern = Pattern.compile("(?i)("
+                + sanitizedQuery.trim().replaceAll("\\s+", "|") + ")");
         Matcher matcher = pattern.matcher(text);
 
         int colorEmphasis = FormattingUtils.getColorFromAttr(mContext, R.attr.colorEmphasis);
